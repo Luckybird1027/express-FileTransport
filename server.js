@@ -1,7 +1,7 @@
-const { User } = require("./model")
-const express = require('express')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
+import express from 'express';
+import { User } from './model.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 const SECRET = 'LuckySecret!'
 
 const app = express()

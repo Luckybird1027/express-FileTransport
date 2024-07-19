@@ -1,5 +1,5 @@
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+import mongoose from 'mongoose'
+import bcrypt from 'bcrypt'
 try {
     mongoose.connect('mongodb://localhost:27017/auth');
     // 测试连接成功
@@ -25,6 +25,4 @@ const UserSchema = new mongoose.Schema({
     }
 })
 
-const User = mongoose.model('User', UserSchema)
-
-module.exports = { User }
+export const User = mongoose.model('User', UserSchema)
