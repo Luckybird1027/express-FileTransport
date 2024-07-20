@@ -2,7 +2,10 @@ import express from 'express';
 import { User } from './model.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import multer from 'multer';
+import fs from 'fs';
 const SECRET = 'LuckySecret!'
+const PORT = 3001
 
 const app = express()
 app.use(express.json())
@@ -91,8 +94,8 @@ const authenticateToken = async (req, res, next) => {
         }
 
         console.log(user.username + " found by Token");
-        req.user = user; // 将用户信息附加到请求对象上
-        next(); // 验证成功，继续处理其他中间件或路由处理程序
+        req.user = user;
+        next();
 
     } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
@@ -105,11 +108,70 @@ const authenticateToken = async (req, res, next) => {
     }
 }
 
-// GET /api/profile 使用Token获取用户信息
+// GET /api/profile路由 使用Token获取用户信息
 app.get("/api/profile", authenticateToken, async (req, res) => {
     res.send(req.user);
 });
 
-app.listen(3001, () => {
-    console.log('Server is running on http://localhost:3001')
+// 确保目标目录static文件夹存在
+const uploadDir = './static/';
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+    console.log('Created ./static/ directory');
+}
+
+// 配置 multer
+const upload = multer({ dest: uploadDir }).any();
+
+// POST /api/upload路由 文件上传
+app.post("/api/upload", authenticateToken, upload, async (req, res) => {
+    try {
+        let file = req.files[0];
+        let fileOriginalName = file.originalname;
+        let filename = "static/" + fileOriginalName;
+
+        await fs.promises.rename(file.path, filename);
+
+        const username = req.user.username;
+        console.log("File " + fileOriginalName + " upload successfully by " + username);
+        res.status(201).send({
+            filename: fileOriginalName,
+            username
+        });
+    } catch (error) {
+        console.error("File upload failed:", error);
+        return res.status(500).send({ error: 'Internal Server Error', message: error.message });
+    }
+});
+
+// GET /api/download路由 文件下载
+app.get("/api/download", async (req, res) => {
+    let filename = req.query.filename;
+    filename = decodeURI(filename);
+
+    try {
+        await fs.promises.access('./static/' + filename, fs.constants.F_OK | fs.constants.R_OK);
+
+        res.set({
+            'Content-Type': 'application/octet-stream',
+            'Content-Disposition': `attachment; filename=${encodeURI(filename)}`,
+        });
+        const readStream = fs.createReadStream('./static/' + filename);
+        readStream.pipe(res);
+        console.log("File " + filename + " start download");
+        readStream.on('end', () => {
+            console.log("File " + filename + " complete download");
+        });
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            console.log("File " + filename + " not found");
+            return res.status(404).send({ error: 'File not found' });
+        }
+        console.error("File download failed:", error);
+        return res.status(500).send({ error: 'Internal Server Error', message: error.message });
+    }
+});
+
+app.listen(PORT, () => {
+    console.log('Server is running on http://localhost:' + PORT)
 })
