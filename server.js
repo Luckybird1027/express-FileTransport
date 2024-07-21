@@ -1,6 +1,6 @@
 import express from 'express';
 import { User } from './model.js';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import fs from 'fs';

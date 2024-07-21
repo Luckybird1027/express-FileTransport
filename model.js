@@ -1,7 +1,14 @@
 import mongoose from 'mongoose'
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
+const MONGODB_USERNAME = 'Luckybird';
+const MONGODB_PASSWORD = 'luckypassword';
+const MONGODB_DATABASE = 'auth';
+
+const MONGODB_URL = `mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017/${MONGODB_DATABASE}?authSource=admin`;
+// const MONGODB_URL = 'mongodb://localhost:27017/auth'
+
 try {
-    mongoose.connect('mongodb://localhost:27017/auth');
+    mongoose.connect(MONGODB_URL);
     // 测试连接成功
     mongoose.connection.on('connected', () => {
         console.log('Mongoose connection successful');

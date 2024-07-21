@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./static:/usr/src/app/static
+    depends_on:
+      - mongo
+    command: node server.js
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: auth
+      MONGO_INITDB_ROOT_USERNAME: Luckybird
+      MONGO_INITDB_ROOT_PASSWORD: luckypassword
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
