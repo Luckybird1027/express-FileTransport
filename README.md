@@ -1,11 +1,11 @@
 # express-FileTransport
-express.js个人练习项目——web文件传输
+express.js个人练习项目——web文件后端服务器
 
 
 
 ## 这是什么
 
-该项目是一个基于**express.js**和**Mongodb**的web文件传输**后端应用**，用户可以注册、登录账户，登录用户可以上传和下载文件，而未登录用户只能下载文件。该项目为纯后端项目，无前端页面。
+该项目是一个基于**express.js**和**Mongodb**的web文件**后端应用**，用户可以注册、登录账户，登录用户可以上传和下载文件，而未登录用户只能下载文件。该项目为纯后端项目，无前端页面。
 
 
 
@@ -17,7 +17,9 @@ express.js个人练习项目——web文件传输
 
 
 
-## 如何使用
+## 如何部署
+
+### 手动部署
 
 **确保安装了node.js**
 
@@ -42,13 +44,19 @@ mongod --version
 
 **安装项目依赖**
 
-在项目根目录下（与package.json同级）
+在项目根目录下（与`package.json`同级）
 
 ```
 npm install
 ```
 
 如果安装依赖过慢或失败，可以尝试使用科学上网或使用npm镜像站
+
+
+
+**更改项目配置**
+
+在`server.js`和`model.js`处更改应用开放的端口、jwt验证密钥，mongodb连接的用户名、密码、所连接的数据库以及连接字符串等。
 
 
 
@@ -60,6 +68,40 @@ npm install
 node server.js
 ```
 
+应用默认开放3001端口，可通过[http://localhost:3001](http://localhost:3001/)来测试服务器是否正常运行。
+
+
+
+### docker部署
+
+目前仅支持手动构建并运行应用
+
+**确保安装了docker**
+
+```
+docker --version
+```
+
+下载地址：[Docker: Accelerated Container Application Development](https://www.docker.com/)
+
+
+
+**更改项目配置**
+
+在`server.js`、`model.js`、`dockerfile`、`docker-compose.yml`处更改应用开放的端口、jwt验证密钥，mongodb容器中的root用户的用户名、密码，mongodb连接的用户名、密码、所连接的数据库以及连接字符串。
+
+
+
+**构建并运行应用**
+
+在根目录下（与`dockerfile`和`docker-compose.yml`同级）
+
+```
+docker compose up --build
+```
+
+应用默认开放3001端口，可通过[http://localhost:3001](http://localhost:3001/)来测试服务器是否正常运行。
+
 
 
 ## TODO
@@ -69,3 +111,4 @@ node server.js
 - [x] 包含用户系统，可以注册，登录
 - [x] 用户可以上传文件，非用户只能下载
 - [x] 用户鉴权可使用jwt，可以存在Cookies或Auth headers里
+- [x] 支持使用docker部署

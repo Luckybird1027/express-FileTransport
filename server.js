@@ -10,6 +10,12 @@ const PORT = 3001
 const app = express()
 app.use(express.json())
 
+// GET 路由 测试服务器是否正常运行
+app.get("/", (req, res) => {
+    res.send("OK!")
+    console.log("OK!")
+})
+
 // GET /api/users路由 返回所有用户
 app.get("/api/users", async (req, res) => {
     const users = await User.find()
