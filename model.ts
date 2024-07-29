@@ -1,11 +1,21 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
-const MONGODB_USERNAME = 'Luckybird';
-const MONGODB_PASSWORD = 'luckypassword';
-const MONGODB_DATABASE = 'auth';
+import { Config, LoadConfig } from './config.js';
 
-const MONGODB_URL = `mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017/${MONGODB_DATABASE}?authSource=admin`;
+const config: Config = LoadConfig();
+
+const MONGODB_USERNAME = process.env.MONGODB_USERNAME && (config.mongodb_username && null);
+const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD && (config.mongodb_password && null);
+const MONGODB_DATABASE = process.env.MONGODB_DATABASE && (config.mongodb_database && "auth");
+var MONGODB_URL = null;
 // const MONGODB_URL = 'mongodb://localhost:27017/auth'
+
+if (!MONGODB_USERNAME || !MONGODB_PASSWORD) {
+    MONGODB_URL = 'mongodb://localhost:27017/auth'
+}
+else{
+    MONGODB_URL = `mongodb://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@mongo:27017/${MONGODB_DATABASE}?authSource=admin`;
+}
 
 try {
     mongoose.connect(MONGODB_URL);
@@ -26,7 +36,7 @@ try {
 const UserSchema = new mongoose.Schema({
     username: { type: String, unique: true },
     password: {
-        type: String, set(val) {
+        type: String, set(val: string) {
             return bcrypt.hashSync(val, 10)
         }
     }
