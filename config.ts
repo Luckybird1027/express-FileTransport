@@ -1,7 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
-const configFilePath = path.join(__dirname, 'config', 'config.json');
+const filename = fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
+
+const configFilePath = path.join(dirname, 'config', 'config.json');
 
 export class Config {
     secret: string | null = null;
