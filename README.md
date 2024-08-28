@@ -23,7 +23,7 @@ express.js个人练习项目——web文件后端服务器
 
 **确保安装了node.js**
 
-```
+```bash
 node -v
 npm -version
 ```
@@ -34,7 +34,7 @@ npm -version
 
 **确保安装了Mongodb**
 
-```
+```bash
 mongod --version
 ```
 
@@ -46,7 +46,7 @@ mongod --version
 
 在项目根目录下（与`package.json`同级）
 
-```
+```bash
 npm install
 ```
 
@@ -59,13 +59,21 @@ npm install
 在`server.js`和`model.js`处更改应用开放的端口、jwt验证密钥，mongodb连接的用户名、密码、所连接的数据库以及连接字符串等。
 
 
+**编译项目**
+
+在项目根目录下
+
+```bash
+npm build
+```
+
 
 **启动项目**
 
 在项目根目录下
 
-```
-node server.js
+```bash
+npm start
 ```
 
 应用默认开放3001端口，可通过[http://localhost:3001](http://localhost:3001/)来测试服务器是否正常运行。
@@ -78,7 +86,7 @@ node server.js
 
 **确保安装了docker**
 
-```
+```bash
 docker --version
 ```
 
@@ -96,7 +104,7 @@ docker --version
 
 在根目录下（与`dockerfile`和`docker-compose.yml`同级）
 
-```
+```bash
 docker compose up --build
 ```
 
